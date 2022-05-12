@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell, ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
-import AppHeader from "./components/AppHeader";
 import Home from "./pages/Home";
 import Config from "./pages/Config";
+import AppHeader from "./components/AppHeader";
 
 const App = () => {
-  const [ colorScheme, setColorScheme ] = useState<ColorScheme>("light");
+  const [ colorScheme, setColorScheme ] = useLocalStorage<ColorScheme>({ key: "theme", defaultValue: "light" });
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   const appTheme = {
