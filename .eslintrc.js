@@ -63,7 +63,6 @@ module.exports = {
     "spaced-comment": [ "error", "always" ],
     "func-style": [ "error", "expression" ],
     "no-extra-semi": "error",
-    "no-undefined": "error",
     "no-useless-concat": "error"
   }
 };
