@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { ActionIcon, Center, Container, Group, Stack, Table, Text } from "@mantine/core";
+import { ActionIcon, Alert, Center, Container, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
@@ -40,17 +40,32 @@ const Config = () => {
   });
   // end localstorage
 
+  // misc function
   const monoText = (s: string) =>
     <Text size="xs" sx={{ fontFamily: "monospace" }}>{s}</Text>;
 
   const showDateOfBirthError = () => {
     showNotification({
       id: "d221270e-4889-4c3d-8d59-08c48535dc74",
-      message: "😔 Please add date of birth!",
+      title: "Bummer!",
+      message: "You haven't added the date of birth",
       autoClose: 3000,
-      color: "red"
+      color: "red",
+      icon: icons.notificationSad
     });
   };
+
+  const emptyDataAlert = (title: string, alertText: string, span: number) =>
+    <tr>
+      <td colSpan={span}>
+        <Alert
+          title={title}
+          icon={icons.alertInfo}
+          color="yellow">
+          {alertText}
+        </Alert>
+      </td>
+    </tr>;
 
   const addNew = (modalFn: (v: boolean) => void) => {
     if (dateOfBirth === null) {
@@ -141,6 +156,7 @@ const Config = () => {
         opened={liveEventModalOpened}
         callback={lifeEventModalCallback}
         allEvents={lifeEvents}
+        dateOfBirth={dateOfBirth}
         eventId={liveEventModalEventId}/>
 
       <LifeBookmarkModal
@@ -159,44 +175,54 @@ const Config = () => {
         <Table highlightOnHover captionSide="top" sx={{ marginTop: 15 }}>
           <caption><Text weight={700}>Life Events</Text></caption>
           <thead>{lifeEventsTableHeader}</thead>
-          <tbody>{lifeEvents.map((e) =>
-            <tr key={e.id}>
-              <td>{monoText(displayOnlyDate(e.start))}</td>
-              <td>{monoText(displayOnlyDate(e.end))}</td>
-              <td>{e.text}</td>
-              <td>
-                <Group>
-                  <ActionIcon onClick={() => editLifeEvent(e.id)}>
-                    {AppIcon("blue", icons.pencil)}
-                  </ActionIcon>
-                  <ActionIcon onClick={() => deleteLifeEvent(e.id)}>
-                    {AppIcon("red", icons.trash)}
-                  </ActionIcon>
-                </Group>
-              </td>
-            </tr>
-          )}</tbody>
+          <tbody>
+            {
+              lifeEvents.length === 0 ?
+                emptyDataAlert("No events found", "You can add events by clicking + icon", 4) :
+                lifeEvents.map((e) =>
+                  <tr key={e.id}>
+                    <td>{monoText(displayOnlyDate(e.start))}</td>
+                    <td>{monoText(displayOnlyDate(e.end))}</td>
+                    <td>{e.text}</td>
+                    <td align="right">
+                      <Group>
+                        <ActionIcon onClick={() => editLifeEvent(e.id)}>
+                          {AppIcon("blue", icons.pencil)}
+                        </ActionIcon>
+                        <ActionIcon onClick={() => deleteLifeEvent(e.id)}>
+                          {AppIcon("red", icons.trash)}
+                        </ActionIcon>
+                      </Group>
+                    </td>
+                  </tr>
+                )
+            }
+          </tbody>
         </Table>
 
         <Table highlightOnHover captionSide="top" sx={{ marginTop: 15 }}>
           <caption><Text weight={700}>Bookmarks</Text></caption>
           <thead>{lifeBookmarksTableHeader}</thead>
-          <tbody>{lifeBookmarks.map((b) =>
-            <tr key={b.id}>
-              <td>{monoText(displayOnlyDate(b.date))}</td>
-              <td>{b.title}</td>
-              <td>
-                <Group>
-                  <ActionIcon onClick={() => editLifeBookmark(b.id)}>
-                    {AppIcon("blue", icons.pencil)}
-                  </ActionIcon>
-                  <ActionIcon onClick={() => deleteLifeBookmark(b.id)}>
-                    {AppIcon("red", icons.trash)}
-                  </ActionIcon>
-                </Group>
-              </td>
-            </tr>
-          )}</tbody>
+          <tbody>
+            {
+              lifeBookmarks.length === 0 ?
+                emptyDataAlert("No bookmarks found", "You can add bookmarks by clicking + icon", 3) :
+                lifeBookmarks.map(b => <tr key={b.id}>
+                  <td>{monoText(displayOnlyDate(b.date))}</td>
+                  <td>{b.title}</td>
+                  <td>
+                    <Group>
+                      <ActionIcon onClick={() => editLifeBookmark(b.id)}>
+                        {AppIcon("blue", icons.pencil)}
+                      </ActionIcon>
+                      <ActionIcon onClick={() => deleteLifeBookmark(b.id)}>
+                        {AppIcon("red", icons.trash)}
+                      </ActionIcon>
+                    </Group>
+                  </td>
+                </tr>)
+            }
+          </tbody>
         </Table>
       </Stack>
     </Container>
