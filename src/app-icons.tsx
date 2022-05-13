@@ -1,6 +1,9 @@
 import { CSSProperties, ReactNode } from "react";
 import {
-  AlertTriangle, Cake, CalendarOff,
+  AlertTriangle,
+  Bookmark,
+  Cake,
+  CalendarOff,
   InfoCircle,
   MoodConfuzed,
   MoonStars,
@@ -23,9 +26,10 @@ export const icons: Record<string, ReactNode> = {
   "cake": <Cake size={16}/>,
   "calendarOff": <CalendarOff size={16}/>,
   "headerMoon": <MoonStars size={16}/>,
-  "notificationSad": <MoodConfuzed size={18} />,
-  "alertInfo": <InfoCircle size={18} />,
-  "alertWarning": <AlertTriangle size={18} />
+  "notificationSad": <MoodConfuzed size={18}/>,
+  "alertInfo": <InfoCircle size={18}/>,
+  "alertWarning": <AlertTriangle size={18}/>,
+  "bookmark": <Bookmark size={24} style={{ padding: 4, fill: "black" }}/>
 };
 
 export const AppIcon = (color: MantineColor, icon: ReactNode) =>

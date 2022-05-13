@@ -1,0 +1,15 @@
+.event-div {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  background-color: lightpink;
+  text-align: center;
+  vertical-align: middle;
+  margin: 1px;
+  opacity: 60%;
+  cursor: pointer;
+}
+
+.event-div:hover {
+  opacity: 100%;
+}
