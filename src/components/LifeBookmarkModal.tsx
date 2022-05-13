@@ -4,12 +4,14 @@ import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useInputState } from "@mantine/hooks";
 import { LifeBookmark, LifeBookmarks, OnlyDate, Optional } from "../types";
+import { displayOnlyDate } from "../types.util";
 
 export interface LifeBookmarkModalProps {
   opened: boolean,
   callback: (lifeBookmark: LifeBookmark | undefined, resetModal: () => void) => void,
-  dateOfBirth: OnlyDate,
   allBookmarks: LifeBookmarks,
+  dateOfBirth: OnlyDate,
+  maxDate: OnlyDate,
   bookmarkId?: string,
 }
 
@@ -32,21 +34,18 @@ const LifeBookmarkModal = (props: LifeBookmarkModalProps) => {
 
   useEffect(() => {
     const isDateEmpty = date === undefined || date === null;
-    let dateError = false;
     const isTextEmpty = title === undefined || title.trim() === "";
-    if (isDateEmpty) {
-      setDateError(isDateEmpty);
-    } else {
-      // TODO: add end date validation later
-      if (props.dateOfBirth !== null && date <= props.dateOfBirth) {
-        setDateError("Bookmark date should be after date of birth");
-        dateError = true;
-      } else {
-        setDateError(isDateEmpty);
-      }
-    }
+    const dateOfBirthError = !isDateEmpty && props.dateOfBirth !== null && date < props.dateOfBirth;
+    const maxDateError = !isDateEmpty && props.maxDate !== null && date > props.maxDate;
+    setDateError(isDateEmpty);
     setTextError(isTextEmpty);
-    setSaveButtonDisabled(isDateEmpty || dateError || isTextEmpty);
+    if (dateOfBirthError) {
+      setDateError("Bookmark date should be starting from or after date of birth");
+    }
+    if (maxDateError) {
+      setDateError(`Bookmark date should be less than 99 years age, which is ${displayOnlyDate(props.maxDate)}`);
+    }
+    setSaveButtonDisabled(isDateEmpty || dateOfBirthError || maxDateError || isTextEmpty);
   }, [ date, title ]);
 
   const resetModal = () => {

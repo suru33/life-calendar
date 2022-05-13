@@ -4,12 +4,14 @@ import { DatePicker } from "@mantine/dates";
 import { useInputState } from "@mantine/hooks";
 import { v4 as uuid4 } from "uuid";
 import { LifeEvent, OnlyDate, Optional, LifeEventOverlapError } from "../types";
-import { dateRangeOverlaps, buildLifeEventOverlapError } from "../types.util";
+import { dateRangeOverlaps, buildLifeEventOverlapError, displayOnlyDate } from "../types.util";
 
 export interface LifeEventModalProps {
   opened: boolean,
   callback: (lifeEvent: LifeEvent | undefined, resetModal: () => void) => void,
   allEvents: LifeEvent[],
+  dateOfBirth: OnlyDate,
+  maxDate: OnlyDate,
   eventId?: string,
 }
 
@@ -23,7 +25,7 @@ const LifeEventModal = (props: LifeEventModalProps) => {
   const [ text, setText ] = useInputState<Optional<string>>(undefined);
   const [ saveButtonDisabled, setSaveButtonDisabled ] = useState(true);
   const [ startDateError, setStartDateError ] = useState<string | boolean>(false);
-  const [ endDateError, setEndDateError ] = useState(false);
+  const [ endDateError, setEndDateError ] = useState<string | boolean>(false);
   const [ textError, setTextError ] = useState(false);
   const [ overlapError, setOverlapError ] = useState<LifeEventOverlapError>({ hidden: true });
 
@@ -35,9 +37,11 @@ const LifeEventModal = (props: LifeEventModalProps) => {
 
   // TODO: validate date of birth
   useEffect(() => {
-    const isStartDateEmpty = typeof startDate === "undefined" || startDate === null;
-    const isEndDateEmpty = typeof endDate === "undefined" || endDate === null;
+    const isStartDateEmpty = startDate === undefined || startDate === null;
+    const isEndDateEmpty = endDate === undefined || endDate === null;
     const startDateError = !isStartDateEmpty && !isEndDateEmpty && startDate >= endDate;
+    const dateOfBirthError = !isStartDateEmpty && props.dateOfBirth !== null && startDate < props.dateOfBirth;
+    const maxDateError = !isEndDateEmpty && props.maxDate !== null && endDate > props.maxDate;
     let overlapError = false;
     const isTextEmpty = text && text.trim() === "" || typeof text === "undefined";
     if (!isStartDateEmpty && !isEndDateEmpty) {
@@ -58,7 +62,21 @@ const LifeEventModal = (props: LifeEventModalProps) => {
     if (startDateError) {
       setStartDateError("Start date should be before end date");
     }
-    setSaveButtonDisabled(isEndDateEmpty || isEndDateEmpty || isTextEmpty || startDateError || overlapError);
+    if (dateOfBirthError) {
+      setStartDateError("Start date should be starting from or after date of birth");
+    }
+    if (maxDateError) {
+      setEndDateError(`End date should not be more than 99 years age, the last date would be ${displayOnlyDate(props.maxDate)}`);
+    }
+    setSaveButtonDisabled(
+      isEndDateEmpty
+      || isEndDateEmpty
+      || isTextEmpty
+      || startDateError
+      || overlapError
+      || dateOfBirthError
+      || maxDateError
+    );
   }, [ startDate, endDate, text ]);
 
   const resetModal = () => {
