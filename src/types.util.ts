@@ -13,10 +13,10 @@ const dateFormat = "YYYY-MM-DD";
 
 export const serializeOnlyDate = (d: OnlyDate): string => d ? dayjs(d).startOf("day").format(dateFormat) : "";
 
-export const deserializeOnlyDate = (s: string): OnlyDate => s ? s.trim() === "" ? null : dayjs(s.trim()).toDate() : null;
+export const deserializeOnlyDate = (s: string): OnlyDate => s.trim() === "" ? null : dayjs(s.trim()).toDate();
 
 export const serializeLifeEvents = (events: LifeEvents): string => {
-  const lifeEventsSer = events.map(e => ({
+  const lifeEventsSer: LifeEventSer[] = events.map(e => ({
     id: e.id,
     start: serializeOnlyDate(e.start),
     end: serializeOnlyDate(e.end),
@@ -44,10 +44,10 @@ export const deserializeLifeEvents = (eventsJson: string): LifeEvents => {
 };
 
 export const serializeBookmarks = (bookmarks: LifeBookmarks): string => {
-  const bookmarksSer = bookmarks.map(b => ({
+  const bookmarksSer: LifeBookmarkSer[] = bookmarks.map(b => ({
     id: b.id,
     date: serializeOnlyDate(b.date),
-    text: b.text
+    title: b.title
   }));
   return JSON.stringify(bookmarksSer);
 };
@@ -59,7 +59,7 @@ export const deserializeBookmarks = (bookmarksJson: string): LifeBookmarks => {
       return bookmarksSer.map(b => ({
         id: b.id,
         date: deserializeOnlyDate(b.date),
-        text: b.text
+        title: b.title
       }));
     } catch (ex) {
       console.error("Failed to deserialize LifeBookmarks", ex);
