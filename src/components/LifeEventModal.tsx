@@ -33,6 +33,7 @@ const LifeEventModal = (props: LifeEventModalProps) => {
     setText(event?.text);
   }, [event]);
 
+  // TODO: validate date of birth
   useEffect(() => {
     const isStartDateEmpty = typeof startDate === "undefined" || startDate === null;
     const isEndDateEmpty = typeof endDate === "undefined" || endDate === null;

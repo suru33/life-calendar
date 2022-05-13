@@ -21,7 +21,7 @@ export interface LifeEventSer {
 export interface LifeBookmark {
   id: string,
   date: OnlyDate,
-  text: string
+  title: string
 }
 
 export type LifeBookmarks = LifeBookmark[];
@@ -29,7 +29,7 @@ export type LifeBookmarks = LifeBookmark[];
 export interface LifeBookmarkSer {
   id: string,
   date: string,
-  text: string
+  title: string
 }
 
 export interface LifeEventOverlapError {
