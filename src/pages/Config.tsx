@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import { useLocalStorage } from "@mantine/hooks";
-import { ActionIcon, Alert, Center, Container, Group, Stack, Table, Text } from "@mantine/core";
+import { ActionIcon, Alert, Container, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
@@ -39,6 +40,37 @@ const Config = () => {
     deserialize: deserializeBookmarks
   });
   // end localstorage
+
+  // date of birth and max date
+  const [ maxDate, setMaxDate ] = useState<OnlyDate>(null);
+  const [ dateOfBirthError, setDateOfBirthError ] = useState<string | boolean>(false);
+  const updateDate = (d: OnlyDate) => {
+    const ok = () => {
+      setDateOfBirthError(false);
+      setDateOfBirth(d);
+    };
+
+    if (d === null) {
+      if (lifeEvents.length === 0 && lifeBookmarks.length === 0) {
+        ok();
+      } else {
+        setDateOfBirthError("Please remove all events and bookmarks before removing the date of birth");
+      }
+    } else {
+      const filteredEvents = lifeEvents.filter(e => e.start !== null && e.start < d);
+      const filteredBookmarks = lifeBookmarks.filter(b => b.date !== null && b.date <= d);
+      if (filteredBookmarks.length === 0 && filteredEvents.length === 0) {
+        ok();
+      } else {
+        setDateOfBirthError("Some events or bookmarks are before the date of birth, please remove them before updating the date of birth");
+      }
+    }
+  };
+
+  useEffect(() => {
+    setMaxDate(dateOfBirth === null ? null
+      : dayjs(dateOfBirth).add(99, "years").startOf("day").toDate());
+  }, [dateOfBirth]);
 
   // misc function
   const monoText = (s: string) =>
@@ -157,20 +189,25 @@ const Config = () => {
         callback={lifeEventModalCallback}
         allEvents={lifeEvents}
         dateOfBirth={dateOfBirth}
+        maxDate={maxDate}
         eventId={liveEventModalEventId}/>
 
       <LifeBookmarkModal
         opened={liveBookmarkModalOpened}
         callback={lifeBookmarkModalCallback}
-        dateOfBirth={dateOfBirth}
         allBookmarks={lifeBookmarks}
+        dateOfBirth={dateOfBirth}
+        maxDate={maxDate}
         bookmarkId={liveBookmarkModalBookmarkId}/>
 
       <Stack>
-        <Text weight={700} align="center">Date of birth</Text>
-        <Center>
-          <DatePicker inputFormat="MMM D, YYYY" value={dateOfBirth} onChange={setDateOfBirth}/>
-        </Center>
+        <DatePicker
+          required
+          label="Date of birth"
+          inputFormat="MMM D, YYYY"
+          value={dateOfBirth}
+          error={dateOfBirthError}
+          onChange={updateDate}/>
 
         <Table highlightOnHover captionSide="top" sx={{ marginTop: 15 }}>
           <caption><Text weight={700}>Life Events</Text></caption>
@@ -180,7 +217,7 @@ const Config = () => {
               lifeEvents.length === 0 ?
                 emptyDataAlert("No events found", "You can add events by clicking + icon", 4) :
                 lifeEvents.map((e) =>
-                  <tr key={e.id}>
+                  <tr key={e.id} style={{ background: "" }}>
                     <td>{monoText(displayOnlyDate(e.start))}</td>
                     <td>{monoText(displayOnlyDate(e.end))}</td>
                     <td>{e.text}</td>
