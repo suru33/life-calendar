@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useLocalStorage } from "@mantine/hooks";
-import { ActionIcon, Alert, Container, Group, Stack, Table, Text } from "@mantine/core";
+import { ActionIcon, Alert, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
@@ -9,6 +9,7 @@ import LifeEventModal from "../components/LifeEventModal";
 import { AppIcon, icons } from "../app-icons";
 import {
   compareOnlyDates,
+  DATE_FORMAT,
   deserializeBookmarks,
   deserializeLifeEvents,
   deserializeOnlyDate,
@@ -41,38 +42,38 @@ const Config = () => {
   });
   // end localstorage
 
-  // date of birth and max date
+  // date of birth and max date validation
   const [ maxDate, setMaxDate ] = useState<OnlyDate>(null);
-  const [ dateOfBirthError, setDateOfBirthError ] = useState<string | boolean>(false);
-  const updateDate = (d: OnlyDate) => {
-    const ok = () => {
-      setDateOfBirthError(false);
-      setDateOfBirth(d);
-    };
-
-    if (d === null) {
-      if (lifeEvents.length === 0 && lifeBookmarks.length === 0) {
-        ok();
-      } else {
-        setDateOfBirthError("Please remove all events and bookmarks before removing the date of birth");
-      }
-    } else {
-      const filteredEvents = lifeEvents.filter(e => e.start !== null && e.start < d);
-      const filteredBookmarks = lifeBookmarks.filter(b => b.date !== null && b.date <= d);
-      if (filteredBookmarks.length === 0 && filteredEvents.length === 0) {
-        ok();
-      } else {
-        setDateOfBirthError("Some events or bookmarks are before the date of birth, please remove them before updating the date of birth");
-      }
-    }
-  };
+  const [ dateOfBirthWarning, setDateOfBirthWarning ] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setMaxDate(dateOfBirth === null ? null
-      : dayjs(dateOfBirth).add(99, "years").startOf("day").toDate());
+    const newMaxDate = dateOfBirth === null ? null : dayjs(dateOfBirth).add(99, "years").startOf("day").toDate();
+    setMaxDate(newMaxDate);
+
+    if (dateOfBirth === null) {
+      if (lifeEvents.length !== 0 || lifeBookmarks.length === 0) {
+        setDateOfBirthWarning("You have orphan events or bookmarks");
+      } else {
+        setDateOfBirthWarning(undefined);
+      }
+    } else {
+      const badBeforeEvents = lifeEvents.filter(e => e.start !== null && e.start < dateOfBirth);
+      const badBeforeBookmarks = lifeBookmarks.filter(b => b.date !== null && b.date <= dateOfBirth);
+      const badAfterEvents = lifeEvents.filter(e => e.end !== null && newMaxDate !== null && e.end > newMaxDate);
+      const badAfterBookmarks = lifeBookmarks.filter(b => b.date !== null && newMaxDate !== null && b.date > newMaxDate);
+      if (badBeforeEvents.length + badBeforeBookmarks.length + badAfterEvents.length + badAfterBookmarks.length !== 0) {
+        setDateOfBirthWarning(
+          "Some events or bookmarks are before the date of birth or after the supported maximum date, they can not be displayed."
+        );
+      } else {
+        setDateOfBirthWarning(undefined);
+      }
+    }
   }, [dateOfBirth]);
 
-  // misc function
+  // misc values and function
+  const titleWeight = 700;
+
   const monoText = (s: string) =>
     <Text size="xs" sx={{ fontFamily: "monospace" }}>{s}</Text>;
 
@@ -92,8 +93,7 @@ const Config = () => {
       <td colSpan={span}>
         <Alert
           title={title}
-          icon={icons.alertInfo}
-          color="yellow">
+          icon={icons.alertInfo}>
           {alertText}
         </Alert>
       </td>
@@ -201,16 +201,34 @@ const Config = () => {
         bookmarkId={liveBookmarkModalBookmarkId}/>
 
       <Stack>
-        <DatePicker
-          required
-          label="Date of birth"
-          inputFormat="MMM D, YYYY"
-          value={dateOfBirth}
-          error={dateOfBirthError}
-          onChange={updateDate}/>
-
+        <Grid grow>
+          <Grid.Col span={6}>
+            <DatePicker
+              label={<Text weight={titleWeight}>Date of birth</Text>}
+              inputFormat={DATE_FORMAT}
+              value={dateOfBirth}
+              icon={icons.cake}
+              onChange={setDateOfBirth}/>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <DatePicker
+              disabled
+              label={<Text weight={titleWeight}>Supported maximum date</Text>}
+              inputFormat={DATE_FORMAT}
+              icon={icons.calendarOff}
+              value={maxDate}/>
+          </Grid.Col>
+          <Grid.Col>
+            <Alert
+              icon={icons.alertWarning}
+              hidden={dateOfBirthWarning === undefined}
+              color="orange">
+              {dateOfBirthWarning}
+            </Alert>
+          </Grid.Col>
+        </Grid>
         <Table highlightOnHover captionSide="top" sx={{ marginTop: 15 }}>
-          <caption><Text weight={700}>Life Events</Text></caption>
+          <caption><Text weight={titleWeight}>Life Events</Text></caption>
           <thead>{lifeEventsTableHeader}</thead>
           <tbody>
             {
@@ -238,7 +256,7 @@ const Config = () => {
         </Table>
 
         <Table highlightOnHover captionSide="top" sx={{ marginTop: 15 }}>
-          <caption><Text weight={700}>Bookmarks</Text></caption>
+          <caption><Text weight={titleWeight}>Bookmarks</Text></caption>
           <thead>{lifeBookmarksTableHeader}</thead>
           <tbody>
             {

@@ -9,9 +9,9 @@ import {
   LifeEventOverlapError
 } from "./types";
 
-const dateFormat = "YYYY-MM-DD";
+export const DATE_FORMAT = "MMM DD, YYYY";
 
-export const serializeOnlyDate = (d: OnlyDate): string => d ? dayjs(d).startOf("day").format(dateFormat) : "";
+export const serializeOnlyDate = (d: OnlyDate): string => d ? dayjs(d).startOf("day").format("YYYY-MM-DD") : "";
 
 export const deserializeOnlyDate = (s: string): OnlyDate => s.trim() === "" ? null : dayjs(s.trim()).toDate();
 
@@ -69,7 +69,7 @@ export const deserializeBookmarks = (bookmarksJson: string): LifeBookmarks => {
   return [];
 };
 
-export const displayOnlyDate = (d: OnlyDate): string => d ? dayjs(d).format("MMM DD, YYYY") : "";
+export const displayOnlyDate = (d: OnlyDate): string => d ? dayjs(d).format(DATE_FORMAT) : "";
 
 export const dateRangeOverlaps = (startA: OnlyDate, endA: OnlyDate, startB: OnlyDate, endB: OnlyDate): boolean => {
   if (startA !== null && endA !== null && startB !== null && endB !== null) {
