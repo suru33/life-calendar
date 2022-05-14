@@ -5,7 +5,7 @@ import { useInputState } from "@mantine/hooks";
 import { v4 as uuid4 } from "uuid";
 import { LifeEvent, LifeEventOverlapError, OnlyDate, Optional } from "../types";
 import { buildLifeEventOverlapError, dateRangeOverlaps, displayOnlyDate } from "../types.util";
-import { swatches } from "../app.colors";
+import { swatches } from "../commons/app.colors";
 
 export interface LifeEventModalProps {
   opened: boolean,

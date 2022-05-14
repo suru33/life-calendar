@@ -6,7 +6,7 @@ import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
-import { AppIcon, icons } from "../app.icons";
+import { AppIcon, icons } from "../commons/app.icons";
 import {
   compareOnlyDates,
   DATE_FORMAT,
