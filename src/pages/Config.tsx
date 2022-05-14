@@ -34,7 +34,7 @@ const Config = () => {
       if (lifeEvents.length !== 0 || lifeBookmarks.length === 0) {
         setDateOfBirthWarning("You have orphan events or bookmarks");
       } else {
-        setDateOfBirthWarning(undefined);
+        setDateOfBirthWarning("Add your date of birth to get started");
       }
     } else {
       const badBeforeEvents = lifeEvents.filter(e => e.start !== null && e.start < dateOfBirth);
@@ -196,7 +196,7 @@ const Config = () => {
               label={<Text weight={titleWeight}>Date of birth</Text>}
               inputFormat={DATE_FORMAT}
               value={dateOfBirth}
-              icon={icons.cake}
+              icon={icons.birthday}
               onChange={setDateOfBirth}/>
           </Grid.Col>
           <Grid.Col span={6}>
