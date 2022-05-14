@@ -24,6 +24,7 @@ import * as weekOfYearPlugin from "dayjs/plugin/weekOfYear";
 import * as durationPlugin from "dayjs/plugin/duration";
 import { DATE_FORMAT, displayOnlyDate } from "../types.util";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
+import { birthDayBackground, newYearBackground } from "../commons/app.colors";
 
 const Home = () => {
   dayjs.extend(weekOfYearPlugin);
@@ -54,8 +55,8 @@ const Home = () => {
 
   const createEventInRange = (weekStart: dayjs.Dayjs, weekEnd: dayjs.Dayjs, e: LifeEvent): EventRange | undefined => {
     if (e.start !== null && e.end !== null) {
-      const eventStart = dayjs(e.start);
-      const eventEnd = dayjs(e.end);
+      const eventStart = dayjs(e.start).startOf("day");
+      const eventEnd = dayjs(e.end).startOf("day");
       const isWeekInRange =
         weekStart.isBetween(eventStart, eventEnd, "day", "[]")
         && weekEnd.isBetween(eventStart, eventEnd, "day", "[]");
@@ -79,18 +80,18 @@ const Home = () => {
 
   useEffect(() => {
     if (dateOfBirth !== null) {
-      const dob = dayjs(dateOfBirth).startOf("week");
+      const dob = dayjs(dateOfBirth).startOf("day");
       const startDay = dayjs(dateOfBirth).startOf("week").toDate();
-      const endDay = dayjs(dateOfBirth).add(99, "years").endOf("week").startOf("day").toDate();
+      const endDay = dayjs(dateOfBirth).add(100, "years").endOf("week").startOf("day").toDate();
 
-      const totalWeeks = 5163;
+      const totalWeeks = 5170;
       const lifeCalendarWeeks: LifeCalendar = [];
 
       const events = lifeEvents.filter(e => isValidEvent(startDay, endDay, e));
       const bookmarks = lifeBookmarks.filter(b => isValidBookmark(startDay, endDay, b));
 
       let weekStart = dayjs(startDay);
-      let weekEnd = weekStart.add(6, "days");
+      let weekEnd = weekStart.add(6, "days").endOf("day");
 
       for (let i = 0; i < totalWeeks; i++) {
         const weekBookmarks = bookmarks.filter(b => isBookmarkInRange(weekStart, weekEnd, b));
@@ -102,10 +103,12 @@ const Home = () => {
             }
           });
         const isNewYear = dayjs(`${weekEnd.year()}-01-01`).isBetween(weekStart, weekEnd, "day", "[]");
-        const d1 = dayjs(`${weekStart.year()}-${dob.month() + 1}-${dob.date()}`);
-        const d2 = dayjs(`${weekEnd.year()}-${dob.month() + 1}-${dob.date()}`);
-        const isBirthday = d1.isBetween(weekStart, weekEnd, "day", "[]") ||
-          d2.isBetween(weekStart, weekEnd, "day", "[]");
+
+        const d1 = dayjs(new Date(weekStart.year(), dob.month(), dob.date())).startOf("day");
+        const d2 = dayjs(new Date(weekEnd.year(), dob.month(), dob.date())).startOf("day");
+
+        const isBirthday = d1.isBetween(weekStart, weekEnd, "hour", "[]") ||
+          d2.isBetween(weekStart, weekEnd, "hour", "[]");
         const color = weekEvents.length === 0 ? "#f8f8ff" : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
           id: uuid4(),
@@ -117,8 +120,8 @@ const Home = () => {
           events: weekEvents,
           color: color
         });
-        weekStart = weekStart.add(7, "days");
-        weekEnd = weekEnd.add(7, "days");
+        weekStart = weekStart.add(7, "days").startOf("day");
+        weekEnd = weekEnd.add(7, "days").endOf("day");
       }
       setLifeCalendar(lifeCalendarWeeks);
     } else {
@@ -128,19 +131,36 @@ const Home = () => {
 
   const createLifeCalendarDiv = (i: LifeCalendarWeek) => {
     let icon;
+    let background = i.color;
     const tooltips: string[] = [];
+
     tooltips.push(`${i.start.format(DATE_FORMAT)} to ${i.end.format(DATE_FORMAT)}`);
+
     if (i.bookmarks.length !== 0) {
       icon = icons.bookmark;
     }
+
     if (i.isNewYear) {
-      icon = icons.calendar;
+      icon = icons.newYear;
+      background = newYearBackground;
       tooltips.push(`Happy new year: ${dayjs(i.end).year()}`);
     }
+
     if (i.isBirthDay) {
       icon = icons.birthday;
-      tooltips.push(`You are ${dayjs(i.end).diff(dateOfBirth, "years")} year(s) old`);
+      background = birthDayBackground;
+      const age = i.end.diff(dateOfBirth, "years");
+      if (age === 0) {
+        icon = icons.born;
+        tooltips.push("You born on this week. Welcome to the word!");
+      }
+      if (age === 1) {
+        tooltips.push("You are 1 year old");
+      } else {
+        tooltips.push(`You are ${dayjs(i.end).diff(dateOfBirth, "years")} years old`);
+      }
     }
+
     i.events.forEach(er => {
       if (er.type === "start") {
         tooltips.push(`${er.event.text} starts on ${displayOnlyDate(er.event.start)}`);
@@ -152,23 +172,24 @@ const Home = () => {
         tooltips.push(`${er.event.text} starts from ${displayOnlyDate(er.event.start)}, ends on ${displayOnlyDate(er.event.end)}`);
       }
     });
+
     i.bookmarks.forEach(b => {
       tooltips.push(`${displayOnlyDate(b.date)}: ${b.title}`);
     });
 
-    const divBody = <div key={i.id} className="event-div" style={{ backgroundColor: i.color }}>{icon}</div>;
+    const tooltipsStack =
+      <Stack spacing="xs">
+        {
+          tooltips.map((ttt, i) =>
+            <Text size="xs" weight={i === 0 ? "bold" : "inherit"} key={uuid4()}>{ttt}</Text>)
+        }
+      </Stack>;
 
-    if (tooltips.length === 0) {
-      return divBody;
-    } else {
-      const tts =
-        <Stack spacing="xs">
-          {tooltips.map(tt => <Text size="xs" key={uuid4()}>{tt}</Text>)}
-        </Stack>;
-      return (
-        <Tooltip id={uuid4()} label={tts}>{divBody}</Tooltip>
-      );
-    }
+    return (
+      <Tooltip id={uuid4()} label={tooltipsStack}>
+        <div key={i.id} className="event-div" style={{ backgroundColor: background }}>{icon}</div>
+      </Tooltip>
+    );
   };
 
   return (

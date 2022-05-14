@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { v4 as uuid4 } from "uuid";
 import { useLocalStorage } from "@mantine/hooks";
 import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
@@ -59,7 +60,7 @@ const Config = () => {
 
   const showDateOfBirthError = () => {
     showNotification({
-      id: "d221270e-4889-4c3d-8d59-08c48535dc74",
+      id: uuid4(),
       title: "Bummer!",
       message: "You haven't added the date of birth",
       autoClose: 3000,

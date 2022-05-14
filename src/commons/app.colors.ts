@@ -15,3 +15,9 @@ export const swatches = [
   ...DEFAULT_THEME.colors.yellow.slice(1, 9),
   ...DEFAULT_THEME.colors.gray.slice(1, 9)
 ];
+
+export const birthDayBackground = "#6200EA";
+export const birthDayForeground = "#EDE7F6";
+export const newYearBackground = "#334155";
+export const newYearForeground = "#F8FAFC";
+

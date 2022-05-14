@@ -5,6 +5,7 @@ import {
   Cake,
   Calendar,
   CalendarOff,
+  Heartbeat,
   InfoCircle,
   MoodConfuzed,
   MoonStars,
@@ -15,6 +16,7 @@ import {
   Trash
 } from "tabler-icons-react";
 import { MantineColor, ThemeIcon } from "@mantine/core";
+import { birthDayForeground, newYearForeground } from "./app.colors";
 
 const iconStyle: CSSProperties = { padding: 3 };
 
@@ -23,9 +25,10 @@ export const icons: Record<string, ReactNode> = {
   "pencil": <Pencil style={iconStyle}/>,
   "trash": <Trash style={iconStyle}/>,
 
-  "birthday": <Cake size={16}/>,
-  "calendar": <Calendar size={16}/>,
+  "birthday": <Cake size={16} color={birthDayForeground}/>,
+  "newYear": <Calendar size={16} color={newYearForeground}/>,
   "calendarOff": <CalendarOff size={16}/>,
+  "born": <Heartbeat size={16} color={birthDayForeground}/>,
 
   "headerSun": <Sun size={16}/>,
   "headerSettings": <Settings size={16}/>,

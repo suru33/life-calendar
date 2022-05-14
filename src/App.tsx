@@ -27,9 +27,9 @@ const App = () => {
             }>
             <Routes>
               <Route path="/">
-                <Route index element={<Navigate to="home" replace/>}/>
-                <Route path="home" element={<Home/>}/>
-                <Route path="config" element={<Config/>}/>
+                <Route key="74df" index element={<Navigate to="home" replace/>}/>
+                <Route key="ea39" path="home" element={<Home/>}/>
+                <Route key="fe64" path="config" element={<Config/>}/>
               </Route>
             </Routes>
           </AppShell>
