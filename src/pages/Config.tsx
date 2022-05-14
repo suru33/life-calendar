@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useLocalStorage } from "@mantine/hooks";
-import { ActionIcon, Alert, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
+import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
-import { AppIcon, icons } from "../app-icons";
+import { AppIcon, icons } from "../app.icons";
 import {
   compareOnlyDates,
   DATE_FORMAT,
@@ -99,14 +99,6 @@ const Config = () => {
       </td>
     </tr>;
 
-  const addNew = (modalFn: (v: boolean) => void) => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
-      modalFn(true);
-    }
-  };
-
   // life events
   const [ liveEventModalEventId, setLiveEventModalEventId ] = useState<string | undefined>(undefined);
   const [ liveEventModalOpened, setLiveEventModalOpened ] = useState(false);
@@ -133,13 +125,22 @@ const Config = () => {
     setLifeEvents(lifeEvents.filter(event => event.id !== id));
   };
 
+  const addNewEvent = () => {
+    if (dateOfBirth === null) {
+      showDateOfBirthError();
+    } else {
+      setLiveEventModalOpened(true);
+    }
+  };
+
   const lifeEventsTableHeader =
     <tr>
+      <th style={{ width: "5px" }}></th>
       <th style={{ width: "110px", textAlign: "center" }}>Start Date</th>
       <th style={{ width: "110px", textAlign: "center" }}>End Date</th>
       <th style={{ textAlign: "center" }}>Event</th>
       <th style={{ width: "100px" }}>
-        <ActionIcon onClick={() => addNew(setLiveEventModalOpened)}>
+        <ActionIcon onClick={addNewEvent}>
           {AppIcon("green", icons.plus)}
         </ActionIcon>
       </th>
@@ -171,12 +172,20 @@ const Config = () => {
     setLifeBookmarks(lifeBookmarks.filter(bookmark => bookmark.id !== id));
   };
 
+  const addNewBookmark = () => {
+    if (dateOfBirth === null) {
+      showDateOfBirthError();
+    } else {
+      setLiveBookmarkModalOpened(true);
+    }
+  };
+
   const lifeBookmarksTableHeader =
     <tr>
       <th style={{ width: "110px", textAlign: "center" }}>Date</th>
       <th style={{ textAlign: "center" }}>Title</th>
       <th style={{ width: "100px" }}>
-        <ActionIcon onClick={() => addNew(setLiveBookmarkModalOpened)}>
+        <ActionIcon onClick={addNewBookmark}>
           {AppIcon("green", icons.plus)}
         </ActionIcon>
       </th>
@@ -236,6 +245,9 @@ const Config = () => {
                 emptyDataAlert("No events found", "You can add events by clicking + icon", 4) :
                 lifeEvents.map((e) =>
                   <tr key={e.id} style={{ background: "" }}>
+                    <td>
+                      <ColorSwatch color={e.color} sx={{ width: 5, height: 15 }} radius={3}/>
+                    </td>
                     <td>{monoText(displayOnlyDate(e.start))}</td>
                     <td>{monoText(displayOnlyDate(e.end))}</td>
                     <td>{e.text}</td>

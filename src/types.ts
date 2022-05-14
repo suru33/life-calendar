@@ -6,7 +6,8 @@ export interface LifeEvent {
   id: string,
   start: OnlyDate,
   end: OnlyDate,
-  text: string
+  text: string,
+  color: string
 }
 
 export type LifeEvents = LifeEvent[];
@@ -15,7 +16,8 @@ export interface LifeEventSer {
   id: string,
   start: string,
   end: string,
-  text: string
+  text: string,
+  color: string
 }
 
 export interface LifeBookmark {

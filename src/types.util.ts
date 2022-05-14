@@ -20,7 +20,8 @@ export const serializeLifeEvents = (events: LifeEvents): string => {
     id: e.id,
     start: serializeOnlyDate(e.start),
     end: serializeOnlyDate(e.end),
-    text: e.text
+    text: e.text,
+    color: e.color
   }));
   return JSON.stringify(lifeEventsSer);
 };
@@ -33,7 +34,8 @@ export const deserializeLifeEvents = (eventsJson: string): LifeEvents => {
         id: e.id,
         start: deserializeOnlyDate(e.start),
         end: deserializeOnlyDate(e.end),
-        text: e.text
+        text: e.text,
+        color: e.color
       }));
     } catch (ex) {
       console.error("Failed to deserialize LifeEvents", ex);
