@@ -55,9 +55,10 @@ const Home = () => {
   const createEventInRange = (weekStart: dayjs.Dayjs, weekEnd: dayjs.Dayjs, e: LifeEvent): EventRange | undefined => {
     if (e.start !== null && e.end !== null) {
       const eventStart = dayjs(e.start);
-      const eventEnd = dayjs(e.start);
-      const isWeekInRange = weekStart.isBetween(eventEnd, eventEnd, "day", "[]") &&
-        weekEnd.isBetween(eventEnd, eventEnd, "day", "[]");
+      const eventEnd = dayjs(e.end);
+      const isWeekInRange =
+        weekStart.isBetween(eventStart, eventEnd, "day", "[]")
+        && weekEnd.isBetween(eventStart, eventEnd, "day", "[]");
       if (isWeekInRange) {
         return { event: e, type: "running" };
       }
@@ -140,6 +141,17 @@ const Home = () => {
       icon = icons.birthday;
       tooltips.push(`You are ${dayjs(i.end).diff(dateOfBirth, "years")} year(s) old`);
     }
+    i.events.forEach(er => {
+      if (er.type === "start") {
+        tooltips.push(`${er.event.text} starts on ${displayOnlyDate(er.event.start)}`);
+      }
+      if (er.type === "end") {
+        tooltips.push(`${er.event.text} ends on ${displayOnlyDate(er.event.start)}`);
+      }
+      if (er.type === "inside") {
+        tooltips.push(`${er.event.text} starts from ${displayOnlyDate(er.event.start)}, ends on ${displayOnlyDate(er.event.end)}`);
+      }
+    });
     i.bookmarks.forEach(b => {
       tooltips.push(`${displayOnlyDate(b.date)}: ${b.title}`);
     });
@@ -151,7 +163,7 @@ const Home = () => {
     } else {
       const tts =
         <Stack spacing="xs">
-          {tooltips.map(tt => <Text key={uuid4()}>{tt}</Text>)}
+          {tooltips.map(tt => <Text size="xs" key={uuid4()}>{tt}</Text>)}
         </Stack>;
       return (
         <Tooltip id={uuid4()} label={tts}>{divBody}</Tooltip>
