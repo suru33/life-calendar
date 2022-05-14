@@ -7,39 +7,19 @@ import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
 import { AppIcon, icons } from "../commons/app.icons";
-import {
-  compareOnlyDates,
-  DATE_FORMAT,
-  deserializeBookmarks,
-  deserializeLifeEvents,
-  deserializeOnlyDate,
-  displayOnlyDate,
-  serializeBookmarks,
-  serializeLifeEvents,
-  serializeOnlyDate
-} from "../types.util";
+import { compareOnlyDates, DATE_FORMAT, displayOnlyDate } from "../types.util";
 import LifeBookmarkModal from "../components/LifeBookmarkModal";
+import {
+  dateOfBirthLocalStorageConfig,
+  lifeBookmarksLocalStorageConfig,
+  lifeEventsLocalStorageConfig
+} from "../commons/app.localstoreage";
 
 const Config = () => {
   // localstorage
-  const [ dateOfBirth, setDateOfBirth ] = useLocalStorage<OnlyDate>({
-    key: "date-of-birth",
-    defaultValue: null,
-    serialize: serializeOnlyDate,
-    deserialize: deserializeOnlyDate
-  });
-  const [ lifeEvents, setLifeEvents ] = useLocalStorage<LifeEvents>({
-    key: "life-events",
-    defaultValue: [],
-    serialize: serializeLifeEvents,
-    deserialize: deserializeLifeEvents
-  });
-  const [ lifeBookmarks, setLifeBookmarks ] = useLocalStorage<LifeBookmarks>({
-    key: "life-bookmarks",
-    defaultValue: [],
-    serialize: serializeBookmarks,
-    deserialize: deserializeBookmarks
-  });
+  const [ dateOfBirth, setDateOfBirth ] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
+  const [ lifeEvents, setLifeEvents ] = useLocalStorage<LifeEvents>(lifeEventsLocalStorageConfig);
+  const [ lifeBookmarks, setLifeBookmarks ] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
   // end localstorage
 
   // date of birth and max date validation

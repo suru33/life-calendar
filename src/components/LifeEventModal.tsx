@@ -4,7 +4,7 @@ import { DatePicker } from "@mantine/dates";
 import { useInputState } from "@mantine/hooks";
 import { v4 as uuid4 } from "uuid";
 import { LifeEvent, LifeEventOverlapError, OnlyDate, Optional } from "../types";
-import { buildLifeEventOverlapError, dateRangeOverlaps, displayOnlyDate } from "../types.util";
+import { buildLifeEventOverlapError, DATE_FORMAT, dateRangeOverlaps, displayOnlyDate } from "../types.util";
 import { swatches } from "../commons/app.colors";
 
 export interface LifeEventModalProps {
@@ -128,12 +128,14 @@ const LifeEventModal = (props: LifeEventModalProps) => {
           required
           label="Start date"
           value={startDate}
+          inputFormat={DATE_FORMAT}
           error={startDateError}
           onChange={setStartDate}/>
         <DatePicker
           required
           label="End date"
           value={endDate}
+          inputFormat={DATE_FORMAT}
           error={endDateError}
           onChange={setEndDate}/>
         <ColorInput

@@ -4,7 +4,7 @@ import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useInputState } from "@mantine/hooks";
 import { LifeBookmark, LifeBookmarks, OnlyDate, Optional } from "../types";
-import { displayOnlyDate } from "../types.util";
+import { DATE_FORMAT, displayOnlyDate } from "../types.util";
 
 export interface LifeBookmarkModalProps {
   opened: boolean,
@@ -92,6 +92,7 @@ const LifeBookmarkModal = (props: LifeBookmarkModalProps) => {
           required
           label="Date"
           value={date}
+          inputFormat={DATE_FORMAT}
           error={dateError}
           onChange={setDate}/>
         <Button disabled={saveButtonDisabled} onClick={saveClicked}>Save</Button>
