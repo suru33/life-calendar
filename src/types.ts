@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export type OnlyDate = Date | null;
 
 export type Optional<T> = T | undefined;
@@ -18,6 +20,11 @@ export interface LifeEventSer {
   end: string,
   text: string,
   color: string
+}
+
+export interface EventRange {
+  event: LifeEvent,
+  type: "start" | "end" | "running" | "inside"
 }
 
 export interface LifeBookmark {
@@ -41,3 +48,15 @@ export interface LifeEventOverlapError {
   text?: string
 }
 
+export interface LifeCalendarWeek {
+  id: string,
+  start: dayjs.Dayjs,
+  end: dayjs.Dayjs,
+  isBirthDay: boolean,
+  isNewYear: boolean,
+  bookmarks: LifeBookmarks,
+  events: EventRange[],
+  color: string
+}
+
+export type LifeCalendar = LifeCalendarWeek[];
