@@ -7,6 +7,7 @@ import {
   CalendarOff,
   Heartbeat,
   InfoCircle,
+  LayoutGrid,
   MoodConfuzed,
   Pencil,
   Plus,
@@ -28,6 +29,7 @@ export const icons: Record<string, ReactNode> = {
   "calendarOff": <CalendarOff size={16}/>,
   "born": <Heartbeat size={16} color={birthDayForeground}/>,
 
+  "headerGrid": <LayoutGrid size={16}/>,
   "headerSettings": <Settings size={16}/>,
 
   "notificationSad": <MoodConfuzed size={18}/>,
