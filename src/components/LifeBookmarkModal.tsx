@@ -93,6 +93,7 @@ const LifeBookmarkModal = (props: LifeBookmarkModalProps) => {
           label="Date"
           value={date}
           inputFormat={DATE_FORMAT}
+          firstDayOfWeek="sunday"
           error={dateError}
           onChange={setDate}/>
         <Button disabled={saveButtonDisabled} onClick={saveClicked}>Save</Button>
