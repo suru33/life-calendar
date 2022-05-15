@@ -8,11 +8,9 @@ import {
   Heartbeat,
   InfoCircle,
   MoodConfuzed,
-  MoonStars,
   Pencil,
   Plus,
   Settings,
-  Sun,
   Trash
 } from "tabler-icons-react";
 import { MantineColor, ThemeIcon } from "@mantine/core";
@@ -30,9 +28,7 @@ export const icons: Record<string, ReactNode> = {
   "calendarOff": <CalendarOff size={16}/>,
   "born": <Heartbeat size={16} color={birthDayForeground}/>,
 
-  "headerSun": <Sun size={16}/>,
   "headerSettings": <Settings size={16}/>,
-  "headerMoon": <MoonStars size={16}/>,
 
   "notificationSad": <MoodConfuzed size={18}/>,
   "alertInfo": <InfoCircle size={18}/>,
