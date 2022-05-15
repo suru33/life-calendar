@@ -1,0 +1,27 @@
+.calendar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.event-div {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  margin: 1px;
+  opacity: 90%;
+  cursor: pointer;
+  border-style: solid;
+  border-width: thin;
+}
+
+.event-div:hover {
+  border-style: dashed;
+  opacity: 100%;
+}
+
+.grid {
+  grid-template-columns: repeat(52, 1fr);
+}

@@ -1,45 +1,26 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { v4 as uuid4 } from "uuid";
 import { useLocalStorage } from "@mantine/hooks";
-import { ActionIcon, Alert, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
+import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
-import { AppIcon, icons } from "../app-icons";
-import {
-  compareOnlyDates,
-  DATE_FORMAT,
-  deserializeBookmarks,
-  deserializeLifeEvents,
-  deserializeOnlyDate,
-  displayOnlyDate,
-  serializeBookmarks,
-  serializeLifeEvents,
-  serializeOnlyDate
-} from "../types.util";
+import { AppIcon, icons } from "../commons/app.icons";
+import { compareOnlyDates, DATE_FORMAT, displayOnlyDate } from "../types.util";
 import LifeBookmarkModal from "../components/LifeBookmarkModal";
+import {
+  dateOfBirthLocalStorageConfig,
+  lifeBookmarksLocalStorageConfig,
+  lifeEventsLocalStorageConfig
+} from "../commons/app.localstoreage";
 
 const Config = () => {
   // localstorage
-  const [ dateOfBirth, setDateOfBirth ] = useLocalStorage<OnlyDate>({
-    key: "date-of-birth",
-    defaultValue: null,
-    serialize: serializeOnlyDate,
-    deserialize: deserializeOnlyDate
-  });
-  const [ lifeEvents, setLifeEvents ] = useLocalStorage<LifeEvents>({
-    key: "life-events",
-    defaultValue: [],
-    serialize: serializeLifeEvents,
-    deserialize: deserializeLifeEvents
-  });
-  const [ lifeBookmarks, setLifeBookmarks ] = useLocalStorage<LifeBookmarks>({
-    key: "life-bookmarks",
-    defaultValue: [],
-    serialize: serializeBookmarks,
-    deserialize: deserializeBookmarks
-  });
+  const [ dateOfBirth, setDateOfBirth ] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
+  const [ lifeEvents, setLifeEvents ] = useLocalStorage<LifeEvents>(lifeEventsLocalStorageConfig);
+  const [ lifeBookmarks, setLifeBookmarks ] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
   // end localstorage
 
   // date of birth and max date validation
@@ -54,7 +35,7 @@ const Config = () => {
       if (lifeEvents.length !== 0 || lifeBookmarks.length === 0) {
         setDateOfBirthWarning("You have orphan events or bookmarks");
       } else {
-        setDateOfBirthWarning(undefined);
+        setDateOfBirthWarning("Add your date of birth to get started");
       }
     } else {
       const badBeforeEvents = lifeEvents.filter(e => e.start !== null && e.start < dateOfBirth);
@@ -79,7 +60,7 @@ const Config = () => {
 
   const showDateOfBirthError = () => {
     showNotification({
-      id: "d221270e-4889-4c3d-8d59-08c48535dc74",
+      id: uuid4(),
       title: "Bummer!",
       message: "You haven't added the date of birth",
       autoClose: 3000,
@@ -98,14 +79,6 @@ const Config = () => {
         </Alert>
       </td>
     </tr>;
-
-  const addNew = (modalFn: (v: boolean) => void) => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
-      modalFn(true);
-    }
-  };
 
   // life events
   const [ liveEventModalEventId, setLiveEventModalEventId ] = useState<string | undefined>(undefined);
@@ -133,13 +106,22 @@ const Config = () => {
     setLifeEvents(lifeEvents.filter(event => event.id !== id));
   };
 
+  const addNewEvent = () => {
+    if (dateOfBirth === null) {
+      showDateOfBirthError();
+    } else {
+      setLiveEventModalOpened(true);
+    }
+  };
+
   const lifeEventsTableHeader =
     <tr>
+      <th style={{ width: "5px" }}></th>
       <th style={{ width: "110px", textAlign: "center" }}>Start Date</th>
       <th style={{ width: "110px", textAlign: "center" }}>End Date</th>
       <th style={{ textAlign: "center" }}>Event</th>
       <th style={{ width: "100px" }}>
-        <ActionIcon onClick={() => addNew(setLiveEventModalOpened)}>
+        <ActionIcon onClick={addNewEvent}>
           {AppIcon("green", icons.plus)}
         </ActionIcon>
       </th>
@@ -171,12 +153,20 @@ const Config = () => {
     setLifeBookmarks(lifeBookmarks.filter(bookmark => bookmark.id !== id));
   };
 
+  const addNewBookmark = () => {
+    if (dateOfBirth === null) {
+      showDateOfBirthError();
+    } else {
+      setLiveBookmarkModalOpened(true);
+    }
+  };
+
   const lifeBookmarksTableHeader =
     <tr>
       <th style={{ width: "110px", textAlign: "center" }}>Date</th>
       <th style={{ textAlign: "center" }}>Title</th>
       <th style={{ width: "100px" }}>
-        <ActionIcon onClick={() => addNew(setLiveBookmarkModalOpened)}>
+        <ActionIcon onClick={addNewBookmark}>
           {AppIcon("green", icons.plus)}
         </ActionIcon>
       </th>
@@ -207,7 +197,7 @@ const Config = () => {
               label={<Text weight={titleWeight}>Date of birth</Text>}
               inputFormat={DATE_FORMAT}
               value={dateOfBirth}
-              icon={icons.cake}
+              icon={icons.birthday}
               onChange={setDateOfBirth}/>
           </Grid.Col>
           <Grid.Col span={6}>
@@ -236,6 +226,9 @@ const Config = () => {
                 emptyDataAlert("No events found", "You can add events by clicking + icon", 4) :
                 lifeEvents.map((e) =>
                   <tr key={e.id} style={{ background: "" }}>
+                    <td>
+                      <ColorSwatch color={e.color} sx={{ width: 5, height: 15 }} radius={3}/>
+                    </td>
                     <td>{monoText(displayOnlyDate(e.start))}</td>
                     <td>{monoText(displayOnlyDate(e.end))}</td>
                     <td>{e.text}</td>

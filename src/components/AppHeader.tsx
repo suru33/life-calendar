@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ActionIcon, ColorScheme, Group, Header, Text, UnstyledButton } from "@mantine/core";
-import { icons } from "../app-icons";
+import { icons } from "../commons/app.icons";
 
 interface AppHeaderProps {
   colorScheme: ColorScheme,
