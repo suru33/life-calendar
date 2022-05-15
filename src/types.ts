@@ -61,7 +61,7 @@ export interface LifeCalendarWeek {
 
 export type LifeCalendar = LifeCalendarWeek[];
 
-export type AppIcon = "plus" | "pencil" | "trash" |
+export type AppIcon = "plus" | "pencil" | "trash" | "arrowUp" | "menu" |
   "birthday" | "newyear" | "calendarOff" | "born" |
   "headerGrid" | "headerSettings" |
   "alertInfo" | "alertWarning" |

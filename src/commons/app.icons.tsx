@@ -1,6 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import {
   AlertTriangle,
+  ArrowUp,
   Bookmark,
   Cake,
   Calendar,
@@ -8,6 +9,7 @@ import {
   Heartbeat,
   InfoCircle,
   LayoutGrid,
+  Menu2,
   Pencil,
   Plus,
   Settings,
@@ -23,6 +25,8 @@ export const icons: Record<AppIcon, ReactNode> = {
   "plus": <Plus style={iconStyle}/>,
   "pencil": <Pencil style={iconStyle}/>,
   "trash": <Trash style={iconStyle}/>,
+  "arrowUp": <ArrowUp style={iconStyle}/>,
+  "menu": <Menu2 style={iconStyle}/>,
 
   "birthday": <Cake size={16} color={birthday.fg}/>,
   "newyear": <Calendar size={16} color={newyear.fg}/>,

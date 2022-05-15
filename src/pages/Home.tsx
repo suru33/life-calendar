@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
-import { Stack, Text, Tooltip } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { ActionIcon, Affix, Button, Drawer, Stack, Text, Tooltip, Transition } from "@mantine/core";
+import { useLocalStorage, useWindowScroll } from "@mantine/hooks";
+
 import {
   EventRange,
   LifeBookmark,
@@ -32,8 +33,10 @@ const Home = () => {
   const [lifeBookmarks] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
 
   // state
+  const [ scroll, scrollTo ] = useWindowScroll();
   const [ lifeCalendar, setLifeCalendar ] = useState<LifeCalendar>([]);
   const [ isPending, setPending ] = useState(true);
+  const [ legendDrawerOpened, setLegendDrawerOpened ] = useState(false);
 
   // validation
   const isValidEvent = (start: OnlyDate, end: OnlyDate, e: LifeEvent) => start !== null
@@ -74,6 +77,15 @@ const Home = () => {
     }
     return undefined;
   };
+
+  const drawerButton =
+    <Tooltip label={<Text size="xs">Show legend</Text>}>
+      <ActionIcon
+        variant="light"
+        onClick={() => setLegendDrawerOpened(true)}>
+        {icons.menu}
+      </ActionIcon>
+    </Tooltip>;
 
   useEffect(() => {
     setPending(true);
@@ -199,9 +211,33 @@ const Home = () => {
       <Text weight="bolder" size="xl" align="center" color="blue">
         Loading, please wait!
       </Text> :
-      <div id="7e79" className="calendar">
-        {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
-      </div>
-  );
+      <>
+        <Drawer
+          opened={legendDrawerOpened}
+          onClose={() => setLegendDrawerOpened(false)}
+          title="All events"
+          padding="xl"
+          overlayOpacity={0.25}
+          size="xl">
+          {/* Drawer content */}
+        </Drawer>
+        <div id="7e79" className="calendar">
+          {drawerButton}
+          {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
+        </div>
+        <Affix position={{ bottom: 20, right: 20 }}>
+          <Transition transition="slide-up" mounted={scroll.y > 0}>
+            {(transitionStyles) =>
+              <Button
+                leftIcon={icons.arrowUp}
+                style={transitionStyles}
+                onClick={() => scrollTo({ y: 0 })}>
+                Scroll to top
+              </Button>
+            }
+          </Transition>
+        </Affix>
+      </>);
 };
+
 export default Home;
