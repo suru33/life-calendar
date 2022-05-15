@@ -55,11 +55,11 @@ const Home = () => {
 
   const createEventInRange = (weekStart: dayjs.Dayjs, weekEnd: dayjs.Dayjs, e: LifeEvent): EventRange | undefined => {
     if (e.start !== null && e.end !== null) {
-      const eventStart = dayjs(e.start).startOf("day");
-      const eventEnd = dayjs(e.end).startOf("day");
+      const eventStart = dayjs(e.start).startOf("day").add(12, "hours");
+      const eventEnd = dayjs(e.end).startOf("day").add(12, "hours");
       const isWeekInRange =
-        weekStart.isBetween(eventStart, eventEnd, "day", "[]")
-        && weekEnd.isBetween(eventStart, eventEnd, "day", "[]");
+        weekStart.isBetween(eventStart, eventEnd, "day", "()")
+        && weekEnd.isBetween(eventStart, eventEnd, "day", "()");
       if (isWeekInRange) {
         return { event: e, type: "running" };
       }
@@ -82,7 +82,8 @@ const Home = () => {
     if (dateOfBirth !== null) {
       const dob = dayjs(dateOfBirth).startOf("day");
       const startDay = dayjs(dateOfBirth).startOf("week").toDate();
-      const endDay = dayjs(dateOfBirth).add(100, "years").endOf("week").startOf("day").toDate();
+      const endDay = dayjs(dateOfBirth).add(100, "years")
+        .endOf("week").startOf("day").toDate();
 
       const totalWeeks = 5170;
       const lifeCalendarWeeks: LifeCalendar = [];
