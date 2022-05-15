@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import weekOfYearPlugin from "dayjs/plugin/weekOfYear";
-import durationPlugin from "dayjs/plugin/duration";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
-import { v4 as uuid4 } from "uuid";
 import { Stack, Text, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
@@ -27,8 +24,6 @@ import { DATE_FORMAT, displayOnlyDate } from "../types.util";
 import "./Home.css";
 
 const Home = () => {
-  dayjs.extend(weekOfYearPlugin);
-  dayjs.extend(durationPlugin);
   dayjs.extend(isBetweenPlugin);
 
   // localstorage
@@ -112,7 +107,7 @@ const Home = () => {
           || d2.isBetween(weekStart, weekEnd, "day", "[]");
         const color = weekEvents.length === 0 ? defaultWeekBackground : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
-          id: uuid4(),
+          id: i.toString(16),
           start: weekStart,
           end: weekEnd,
           isBirthDay: isBirthday,
@@ -178,22 +173,22 @@ const Home = () => {
     });
 
     const tooltipsStack =
-      <Stack spacing="xs">
+      <Stack spacing="xs" key={`${i.id}s`}>
         {
           tooltips.map((ttt, ix) =>
-            <Text size="xs" weight={ix === 0 ? "bold" : "inherit"} key={`${i.id}-ttt-${ix}`}>{ttt}</Text>)
+            <Text size="xs" weight={ix === 0 ? "bold" : "inherit"} key={`${i.id}t${ix}`}>{ttt}</Text>)
         }
       </Stack>;
 
     return (
-      <Tooltip id={`${i.id}-t`} label={tooltipsStack}>
-        <div key={i.id} className="week" style={{ backgroundColor: background }}>{icon}</div>
+      <Tooltip key={i.id} label={tooltipsStack}>
+        <div id={`${i.id}w`} className="week" style={{ backgroundColor: background }}>{icon}</div>
       </Tooltip>
     );
   };
 
   return (
-    <div className="calendar">
+    <div id="7e79" className="calendar">
       {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
     </div>
   );
