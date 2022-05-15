@@ -8,36 +8,35 @@ import {
   Heartbeat,
   InfoCircle,
   LayoutGrid,
-  MoodConfuzed,
   Pencil,
   Plus,
   Settings,
   Trash
 } from "tabler-icons-react";
 import { MantineColor, ThemeIcon } from "@mantine/core";
-import { birthDayForeground, newYearForeground } from "./app.colors";
+import { birthday, born, newyear } from "./app.colors";
+import { AppIcon } from "../types";
 
 const iconStyle: CSSProperties = { padding: 3 };
 
-export const icons: Record<string, ReactNode> = {
+export const icons: Record<AppIcon, ReactNode> = {
   "plus": <Plus style={iconStyle}/>,
   "pencil": <Pencil style={iconStyle}/>,
   "trash": <Trash style={iconStyle}/>,
 
-  "birthday": <Cake size={16} color={birthDayForeground}/>,
-  "newYear": <Calendar size={16} color={newYearForeground}/>,
+  "birthday": <Cake size={16} color={birthday.fg}/>,
+  "newyear": <Calendar size={16} color={newyear.fg}/>,
   "calendarOff": <CalendarOff size={16}/>,
-  "born": <Heartbeat size={16} color={birthDayForeground}/>,
+  "born": <Heartbeat size={16} color={born.fg}/>,
 
   "headerGrid": <LayoutGrid size={16}/>,
   "headerSettings": <Settings size={16}/>,
 
-  "notificationSad": <MoodConfuzed size={18}/>,
   "alertInfo": <InfoCircle size={18}/>,
   "alertWarning": <AlertTriangle size={18}/>,
 
   "bookmark": <Bookmark size={24} style={{ padding: 4, fill: "black" }}/>
 };
 
-export const AppIcon = (color: MantineColor, icon: ReactNode) =>
+export const ColorIcon = (color: MantineColor, icon: ReactNode) =>
   <ThemeIcon variant="light" color={color}>{icon}</ThemeIcon>;
