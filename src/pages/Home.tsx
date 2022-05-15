@@ -166,7 +166,7 @@ const Home = () => {
         tooltips.push(`${er.event.text} starts on ${displayOnlyDate(er.event.start)}`);
       }
       if (er.type === "end") {
-        tooltips.push(`${er.event.text} ends on ${displayOnlyDate(er.event.start)}`);
+        tooltips.push(`${er.event.text} ends on ${displayOnlyDate(er.event.end)}`);
       }
       if (er.type === "inside") {
         tooltips.push(`${er.event.text} starts from ${displayOnlyDate(er.event.start)}, ends on ${displayOnlyDate(er.event.end)}`);
