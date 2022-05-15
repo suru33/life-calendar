@@ -11,7 +11,9 @@ const AppHeader = () =>
         </UnstyledButton>
       </Group>
       <Group>
-        {/*   TODO: Add home icon */}
+        <ActionIcon variant="default" component={Link} to="/home" size={30}>
+          {icons.headerGrid}
+        </ActionIcon>
         <ActionIcon variant="default" component={Link} to="/config" size={30}>
           {icons.headerSettings}
         </ActionIcon>
