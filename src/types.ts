@@ -63,7 +63,8 @@ export type LifeCalendar = LifeCalendarWeek[];
 
 export type AppIcon = "plus" | "pencil" | "trash" |
   "birthday" | "newyear" | "calendarOff" | "born" |
-  "headerGrid" | "headerSettings" |
+  "headerHome" | "headerSettings" | "headerSave" |
+  "menuFileImport" | "menuFileExport" |
   "alertInfo" | "alertWarning" |
   "bookmark"
 
