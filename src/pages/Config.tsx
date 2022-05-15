@@ -5,7 +5,7 @@ import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, T
 import { DatePicker } from "@mantine/dates";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
-import { AppIcon, icons } from "../commons/app.icons";
+import { ColorIcon, icons } from "../commons/app.icons";
 import { compareOnlyDates, DATE_FORMAT, displayOnlyDate } from "../types.util";
 import LifeBookmarkModal from "../components/LifeBookmarkModal";
 import {
@@ -105,7 +105,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Event</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewEvent}>
-          {AppIcon("green", icons.plus)}
+          {ColorIcon("green", icons.plus)}
         </ActionIcon>
       </th>
     </tr>;
@@ -146,7 +146,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Title</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewBookmark}>
-          {AppIcon("green", icons.plus)}
+          {ColorIcon("green", icons.plus)}
         </ActionIcon>
       </th>
     </tr>;
@@ -214,10 +214,10 @@ const Config = () => {
                     <td align="right">
                       <Group>
                         <ActionIcon onClick={() => editLifeEvent(e.id)}>
-                          {AppIcon("blue", icons.pencil)}
+                          {ColorIcon("blue", icons.pencil)}
                         </ActionIcon>
                         <ActionIcon onClick={() => deleteLifeEvent(e.id)}>
-                          {AppIcon("red", icons.trash)}
+                          {ColorIcon("red", icons.trash)}
                         </ActionIcon>
                       </Group>
                     </td>
@@ -240,10 +240,10 @@ const Config = () => {
                   <td>
                     <Group>
                       <ActionIcon onClick={() => editLifeBookmark(b.id)}>
-                        {AppIcon("blue", icons.pencil)}
+                        {ColorIcon("blue", icons.pencil)}
                       </ActionIcon>
                       <ActionIcon onClick={() => deleteLifeBookmark(b.id)}>
-                        {AppIcon("red", icons.trash)}
+                        {ColorIcon("red", icons.trash)}
                       </ActionIcon>
                     </Group>
                   </td>

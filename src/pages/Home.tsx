@@ -18,7 +18,7 @@ import {
   lifeBookmarksLocalStorageConfig,
   lifeEventsLocalStorageConfig
 } from "../commons/app.localstoreage";
-import { birthDayBackground, defaultWeekBackground, newYearBackground } from "../commons/app.colors";
+import { birthday, born, defaultBg, newyear } from "../commons/app.colors";
 import { icons } from "../commons/app.icons";
 import { DATE_FORMAT, displayOnlyDate } from "../types.util";
 import "./Home.css";
@@ -96,7 +96,7 @@ const Home = () => {
               weekEvents.push(e);
             }
           });
-        const isNewYear = dayjs(`${weekEnd.year()}-01-01`).isBetween(weekStart, weekEnd, "day", "[]");
+        const isNewyear = dayjs(`${weekEnd.year()}-01-01`).isBetween(weekStart, weekEnd, "day", "[]");
 
         const d1 = dayjs(new Date(weekStart.year(), dob.month(), dob.date()))
           .startOf("day").add(12, "hours");
@@ -105,13 +105,13 @@ const Home = () => {
 
         const isBirthday = d1.isBetween(weekStart, weekEnd, "day", "[]")
           || d2.isBetween(weekStart, weekEnd, "day", "[]");
-        const color = weekEvents.length === 0 ? defaultWeekBackground : weekEvents[weekEvents.length - 1].event.color;
+        const color = weekEvents.length === 0 ? defaultBg : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
           id: i.toString(16),
           start: weekStart,
           end: weekEnd,
-          isBirthDay: isBirthday,
-          isNewYear: isNewYear,
+          isBirthday: isBirthday,
+          isNewyear: isNewyear,
           bookmarks: weekBookmarks,
           events: weekEvents,
           color: color
@@ -136,18 +136,19 @@ const Home = () => {
       icon = icons.bookmark;
     }
 
-    if (i.isNewYear) {
-      icon = icons.newYear;
-      background = newYearBackground;
+    if (i.isNewyear) {
+      icon = icons.newyear;
+      background = newyear.bg;
       tooltips.push(`Happy new year: ${dayjs(i.end).year()}`);
     }
 
-    if (i.isBirthDay) {
+    if (i.isBirthday) {
       icon = icons.birthday;
-      background = birthDayBackground;
+      background = birthday.bg;
       const age = i.end.diff(dateOfBirth, "years");
       if (age === 0) {
         icon = icons.born;
+        background = born.bg;
         tooltips.push("You born on this week. Welcome to the word!");
       } else if (age === 1) {
         tooltips.push("You are 1 year old");
