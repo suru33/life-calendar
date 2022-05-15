@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { v4 as uuid4 } from "uuid";
 import { useLocalStorage } from "@mantine/hooks";
 import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
 import { AppIcon, icons } from "../commons/app.icons";
@@ -58,17 +56,6 @@ const Config = () => {
   const monoText = (s: string) =>
     <Text size="xs" sx={{ fontFamily: "monospace" }}>{s}</Text>;
 
-  const showDateOfBirthError = () => {
-    showNotification({
-      id: uuid4(),
-      title: "Bummer!",
-      message: "You haven't added the date of birth",
-      autoClose: 3000,
-      color: "red",
-      icon: icons.notificationSad
-    });
-  };
-
   const emptyDataAlert = (title: string, alertText: string, span: number) =>
     <tr>
       <td colSpan={span}>
@@ -107,9 +94,7 @@ const Config = () => {
   };
 
   const addNewEvent = () => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
+    if (dateOfBirth !== null) {
       setLiveEventModalOpened(true);
     }
   };
@@ -154,9 +139,7 @@ const Config = () => {
   };
 
   const addNewBookmark = () => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
+    if (dateOfBirth !== null) {
       setLiveBookmarkModalOpened(true);
     }
   };
