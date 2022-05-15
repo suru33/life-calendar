@@ -5,13 +5,16 @@
 }
 
 .week {
+  box-shadow: rgb(0 0 0 / 15%) 0 0 3px inset;
   width: 24px;
   height: 24px;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
-  margin: 1px;
-  opacity: 90%;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 1px;
+  opacity: 80%;
   cursor: pointer;
   border-style: solid;
   border-width: thin;
