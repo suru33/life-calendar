@@ -105,7 +105,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Event</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewEvent}>
-          {ColorIcon("green", icons.plus)}
+          {ColorIcon("green", "plus")}
         </ActionIcon>
       </th>
     </tr>;
@@ -146,7 +146,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Title</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewBookmark}>
-          {ColorIcon("green", icons.plus)}
+          {ColorIcon("green", "plus")}
         </ActionIcon>
       </th>
     </tr>;
@@ -214,10 +214,10 @@ const Config = () => {
                     <td align="right">
                       <Group>
                         <ActionIcon onClick={() => editLifeEvent(e.id)}>
-                          {ColorIcon("blue", icons.pencil)}
+                          {ColorIcon("blue", "pencil")}
                         </ActionIcon>
                         <ActionIcon onClick={() => deleteLifeEvent(e.id)}>
-                          {ColorIcon("red", icons.trash)}
+                          {ColorIcon("red", "trash")}
                         </ActionIcon>
                       </Group>
                     </td>
@@ -240,10 +240,10 @@ const Config = () => {
                   <td>
                     <Group>
                       <ActionIcon onClick={() => editLifeBookmark(b.id)}>
-                        {ColorIcon("blue", icons.pencil)}
+                        {ColorIcon("blue", "pencil")}
                       </ActionIcon>
                       <ActionIcon onClick={() => deleteLifeBookmark(b.id)}>
-                        {ColorIcon("red", icons.trash)}
+                        {ColorIcon("red", "trash")}
                       </ActionIcon>
                     </Group>
                   </td>

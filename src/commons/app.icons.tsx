@@ -38,5 +38,5 @@ export const icons: Record<AppIcon, ReactNode> = {
   "bookmark": <Bookmark size={24} style={{ padding: 4, fill: "black" }}/>
 };
 
-export const ColorIcon = (color: MantineColor, icon: ReactNode) =>
-  <ThemeIcon variant="light" color={color}>{icon}</ThemeIcon>;
+export const ColorIcon = (color: MantineColor, icon: AppIcon) =>
+  <ThemeIcon variant="light" color={color}>{icons[icon]}</ThemeIcon>;
