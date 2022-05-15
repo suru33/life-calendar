@@ -105,11 +105,13 @@ const Home = () => {
           });
         const isNewYear = dayjs(`${weekEnd.year()}-01-01`).isBetween(weekStart, weekEnd, "day", "[]");
 
-        const d1 = dayjs(new Date(weekStart.year(), dob.month(), dob.date())).startOf("day");
-        const d2 = dayjs(new Date(weekEnd.year(), dob.month(), dob.date())).startOf("day");
+        const d1 = dayjs(new Date(weekStart.year(), dob.month(), dob.date()))
+          .startOf("day").add(12, "hours");
+        const d2 = dayjs(new Date(weekEnd.year(), dob.month(), dob.date()))
+          .startOf("day").add(12, "hours");
 
-        const isBirthday = d1.isBetween(weekStart, weekEnd, "hour", "[]") ||
-          d2.isBetween(weekStart, weekEnd, "hour", "[]");
+        const isBirthday = d1.isBetween(weekStart, weekEnd, "day", "[]")
+          || d2.isBetween(weekStart, weekEnd, "day", "[]");
         const color = weekEvents.length === 0 ? "#f8f8ff" : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
           id: uuid4(),
@@ -154,8 +156,7 @@ const Home = () => {
       if (age === 0) {
         icon = icons.born;
         tooltips.push("You born on this week. Welcome to the word!");
-      }
-      if (age === 1) {
+      } else if (age === 1) {
         tooltips.push("You are 1 year old");
       } else {
         tooltips.push(`You are ${dayjs(i.end).diff(dateOfBirth, "years")} years old`);
