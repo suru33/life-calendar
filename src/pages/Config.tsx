@@ -31,7 +31,7 @@ const Config = () => {
 
     if (dateOfBirth === null) {
       if (lifeEvents.length !== 0 || lifeBookmarks.length === 0) {
-        setDateOfBirthWarning("You have orphan events or bookmarks");
+        setDateOfBirthWarning("You have orphan events or bookmarks, add your date of birth to get started");
       } else {
         setDateOfBirthWarning("Add your date of birth to get started");
       }
@@ -94,9 +94,7 @@ const Config = () => {
   };
 
   const addNewEvent = () => {
-    if (dateOfBirth !== null) {
-      setLiveEventModalOpened(true);
-    }
+    setLiveEventModalOpened(dateOfBirth !== null);
   };
 
   const lifeEventsTableHeader =
@@ -139,9 +137,7 @@ const Config = () => {
   };
 
   const addNewBookmark = () => {
-    if (dateOfBirth !== null) {
-      setLiveBookmarkModalOpened(true);
-    }
+    setLiveBookmarkModalOpened(dateOfBirth !== null);
   };
 
   const lifeBookmarksTableHeader =
