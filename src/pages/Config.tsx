@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { v4 as uuid4 } from "uuid";
 import { useLocalStorage } from "@mantine/hooks";
 import { ActionIcon, Alert, ColorSwatch, Container, Grid, Group, Stack, Table, Text } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { showNotification } from "@mantine/notifications";
 import { LifeBookmark, LifeBookmarks, LifeEvent, LifeEvents, OnlyDate } from "../types";
 import LifeEventModal from "../components/LifeEventModal";
-import { AppIcon, icons } from "../commons/app.icons";
+import { ColorIcon, icons } from "../commons/app.icons";
 import { compareOnlyDates, DATE_FORMAT, displayOnlyDate } from "../types.util";
 import LifeBookmarkModal from "../components/LifeBookmarkModal";
 import {
@@ -33,7 +31,7 @@ const Config = () => {
 
     if (dateOfBirth === null) {
       if (lifeEvents.length !== 0 || lifeBookmarks.length === 0) {
-        setDateOfBirthWarning("You have orphan events or bookmarks");
+        setDateOfBirthWarning("You have orphan events or bookmarks, add your date of birth to get started");
       } else {
         setDateOfBirthWarning("Add your date of birth to get started");
       }
@@ -57,17 +55,6 @@ const Config = () => {
 
   const monoText = (s: string) =>
     <Text size="xs" sx={{ fontFamily: "monospace" }}>{s}</Text>;
-
-  const showDateOfBirthError = () => {
-    showNotification({
-      id: uuid4(),
-      title: "Bummer!",
-      message: "You haven't added the date of birth",
-      autoClose: 3000,
-      color: "red",
-      icon: icons.notificationSad
-    });
-  };
 
   const emptyDataAlert = (title: string, alertText: string, span: number) =>
     <tr>
@@ -107,11 +94,7 @@ const Config = () => {
   };
 
   const addNewEvent = () => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
-      setLiveEventModalOpened(true);
-    }
+    setLiveEventModalOpened(dateOfBirth !== null);
   };
 
   const lifeEventsTableHeader =
@@ -122,7 +105,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Event</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewEvent}>
-          {AppIcon("green", icons.plus)}
+          {ColorIcon("green", "plus")}
         </ActionIcon>
       </th>
     </tr>;
@@ -154,11 +137,7 @@ const Config = () => {
   };
 
   const addNewBookmark = () => {
-    if (dateOfBirth === null) {
-      showDateOfBirthError();
-    } else {
-      setLiveBookmarkModalOpened(true);
-    }
+    setLiveBookmarkModalOpened(dateOfBirth !== null);
   };
 
   const lifeBookmarksTableHeader =
@@ -167,7 +146,7 @@ const Config = () => {
       <th style={{ textAlign: "center" }}>Title</th>
       <th style={{ width: "100px" }}>
         <ActionIcon onClick={addNewBookmark}>
-          {AppIcon("green", icons.plus)}
+          {ColorIcon("green", "plus")}
         </ActionIcon>
       </th>
     </tr>;
@@ -235,10 +214,10 @@ const Config = () => {
                     <td align="right">
                       <Group>
                         <ActionIcon onClick={() => editLifeEvent(e.id)}>
-                          {AppIcon("blue", icons.pencil)}
+                          {ColorIcon("blue", "pencil")}
                         </ActionIcon>
                         <ActionIcon onClick={() => deleteLifeEvent(e.id)}>
-                          {AppIcon("red", icons.trash)}
+                          {ColorIcon("red", "trash")}
                         </ActionIcon>
                       </Group>
                     </td>
@@ -261,10 +240,10 @@ const Config = () => {
                   <td>
                     <Group>
                       <ActionIcon onClick={() => editLifeBookmark(b.id)}>
-                        {AppIcon("blue", icons.pencil)}
+                        {ColorIcon("blue", "pencil")}
                       </ActionIcon>
                       <ActionIcon onClick={() => deleteLifeBookmark(b.id)}>
-                        {AppIcon("red", icons.trash)}
+                        {ColorIcon("red", "trash")}
                       </ActionIcon>
                     </Group>
                   </td>

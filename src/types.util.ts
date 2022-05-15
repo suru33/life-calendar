@@ -3,10 +3,10 @@ import {
   LifeBookmarks,
   LifeBookmarkSer,
   LifeEvent,
+  LifeEventOverlapError,
   LifeEvents,
   LifeEventSer,
-  OnlyDate,
-  LifeEventOverlapError
+  OnlyDate
 } from "./types";
 
 export const DATE_FORMAT = "MMM DD, YYYY";

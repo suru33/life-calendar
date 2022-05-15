@@ -52,11 +52,22 @@ export interface LifeCalendarWeek {
   id: string,
   start: dayjs.Dayjs,
   end: dayjs.Dayjs,
-  isBirthDay: boolean,
-  isNewYear: boolean,
+  isBirthday: boolean,
+  isNewyear: boolean,
   bookmarks: LifeBookmarks,
   events: EventRange[],
   color: string
 }
 
 export type LifeCalendar = LifeCalendarWeek[];
+
+export type AppIcon = "plus" | "pencil" | "trash" |
+  "birthday" | "newyear" | "calendarOff" | "born" |
+  "headerGrid" | "headerSettings" |
+  "alertInfo" | "alertWarning" |
+  "bookmark"
+
+export interface ColorCombo {
+  bg: string,
+  fg: string
+}

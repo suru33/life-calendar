@@ -1,4 +1,5 @@
 import { DEFAULT_THEME } from "@mantine/core";
+import { ColorCombo } from "../types";
 
 export const swatches = [
   ...DEFAULT_THEME.colors.blue.slice(1, 9),
@@ -16,9 +17,20 @@ export const swatches = [
   ...DEFAULT_THEME.colors.gray.slice(1, 9)
 ];
 
-export const birthDayBackground = "#6200ea";
-export const birthDayForeground = "#ede7f6";
-export const newYearBackground = "#334155";
-export const newYearForeground = "#f8fafc";
-export const defaultWeekBackground = "#f8f8ff";
+export const born: ColorCombo = {
+  bg: "#ff0000",
+  fg: "#ffffff"
+};
+
+export const birthday: ColorCombo = {
+  bg: "#6200ea",
+  fg: "#ede7f6"
+};
+
+export const newyear: ColorCombo = {
+  bg: "#334155",
+  fg: "#f8fafc"
+};
+
+export const defaultBg = "#f8f8ff";
 
