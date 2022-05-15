@@ -4,7 +4,7 @@
   flex-wrap: wrap;
 }
 
-.event-div {
+.week {
   width: 24px;
   height: 24px;
   display: inline-block;
@@ -17,11 +17,8 @@
   border-width: thin;
 }
 
-.event-div:hover {
+.week:hover {
   border-style: dashed;
   opacity: 100%;
 }
 
-.grid {
-  grid-template-columns: repeat(52, 1fr);
-}

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import weekOfYearPlugin from "dayjs/plugin/weekOfYear";
+import durationPlugin from "dayjs/plugin/duration";
+import isBetweenPlugin from "dayjs/plugin/isBetween";
 import { v4 as uuid4 } from "uuid";
 import { Stack, Text, Tooltip } from "@mantine/core";
-import { icons } from "../commons/app.icons";
 import { useLocalStorage } from "@mantine/hooks";
 import {
   EventRange,
@@ -19,24 +21,20 @@ import {
   lifeBookmarksLocalStorageConfig,
   lifeEventsLocalStorageConfig
 } from "../commons/app.localstoreage";
-import "./Home.css";
-import * as weekOfYearPlugin from "dayjs/plugin/weekOfYear";
-import * as durationPlugin from "dayjs/plugin/duration";
+import { birthDayBackground, defaultWeekBackground, newYearBackground } from "../commons/app.colors";
+import { icons } from "../commons/app.icons";
 import { DATE_FORMAT, displayOnlyDate } from "../types.util";
-import isBetweenPlugin from "dayjs/plugin/isBetween";
-import { birthDayBackground, newYearBackground } from "../commons/app.colors";
+import "./Home.css";
 
 const Home = () => {
   dayjs.extend(weekOfYearPlugin);
   dayjs.extend(durationPlugin);
   dayjs.extend(isBetweenPlugin);
+
   // localstorage
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ dateOfBirth, setDateOfBirth ] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ lifeEvents, setLifeEvents ] = useLocalStorage<LifeEvents>(lifeEventsLocalStorageConfig);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ lifeBookmarks, setLifeBookmarks ] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
+  const [dateOfBirth] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
+  const [lifeEvents] = useLocalStorage<LifeEvents>(lifeEventsLocalStorageConfig);
+  const [lifeBookmarks] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
   const [ lifeCalendar, setLifeCalendar ] = useState<LifeCalendar>([]);
 
   const isValidEvent = (start: OnlyDate, end: OnlyDate, e: LifeEvent) => start !== null
@@ -112,7 +110,7 @@ const Home = () => {
 
         const isBirthday = d1.isBetween(weekStart, weekEnd, "day", "[]")
           || d2.isBetween(weekStart, weekEnd, "day", "[]");
-        const color = weekEvents.length === 0 ? "#f8f8ff" : weekEvents[weekEvents.length - 1].event.color;
+        const color = weekEvents.length === 0 ? defaultWeekBackground : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
           id: uuid4(),
           start: weekStart,
@@ -182,14 +180,14 @@ const Home = () => {
     const tooltipsStack =
       <Stack spacing="xs">
         {
-          tooltips.map((ttt, i) =>
-            <Text size="xs" weight={i === 0 ? "bold" : "inherit"} key={uuid4()}>{ttt}</Text>)
+          tooltips.map((ttt, ix) =>
+            <Text size="xs" weight={ix === 0 ? "bold" : "inherit"} key={`${i.id}-ttt-${ix}`}>{ttt}</Text>)
         }
       </Stack>;
 
     return (
-      <Tooltip id={uuid4()} label={tooltipsStack}>
-        <div key={i.id} className="event-div" style={{ backgroundColor: background }}>{icon}</div>
+      <Tooltip id={`${i.id}-t`} label={tooltipsStack}>
+        <div key={i.id} className="week" style={{ backgroundColor: background }}>{icon}</div>
       </Tooltip>
     );
   };
