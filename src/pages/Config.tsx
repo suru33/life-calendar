@@ -175,6 +175,7 @@ const Config = () => {
             <DatePicker
               label={<Text weight={titleWeight}>Date of birth</Text>}
               inputFormat={DATE_FORMAT}
+              firstDayOfWeek="sunday"
               value={dateOfBirth}
               icon={icons.birthday}
               onChange={setDateOfBirth}/>
@@ -184,6 +185,7 @@ const Config = () => {
               disabled
               label={<Text weight={titleWeight}>Supported maximum date</Text>}
               inputFormat={DATE_FORMAT}
+              firstDayOfWeek="sunday"
               icon={icons.calendarOff}
               value={maxDate}/>
           </Grid.Col>

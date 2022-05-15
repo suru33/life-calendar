@@ -30,8 +30,12 @@ const Home = () => {
   const [dateOfBirth] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
   const [lifeEvents] = useLocalStorage<LifeEvents>(lifeEventsLocalStorageConfig);
   const [lifeBookmarks] = useLocalStorage<LifeBookmarks>(lifeBookmarksLocalStorageConfig);
-  const [ lifeCalendar, setLifeCalendar ] = useState<LifeCalendar>([]);
 
+  // state
+  const [ lifeCalendar, setLifeCalendar ] = useState<LifeCalendar>([]);
+  const [ isPending, setPending ] = useState(true);
+
+  // validation
   const isValidEvent = (start: OnlyDate, end: OnlyDate, e: LifeEvent) => start !== null
     && end !== null
     && e.start !== null
@@ -72,6 +76,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    setPending(true);
     if (dateOfBirth !== null) {
       const dob = dayjs(dateOfBirth).startOf("day");
       const startDay = dayjs(dateOfBirth).startOf("week").toDate();
@@ -123,6 +128,7 @@ const Home = () => {
     } else {
       setLifeCalendar([]);
     }
+    setPending(false);
   }, []);
 
   const createLifeCalendarDiv = (i: LifeCalendarWeek) => {
@@ -189,10 +195,13 @@ const Home = () => {
   };
 
   return (
-    <div id="7e79" className="calendar">
-      {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
-    </div>
+    isPending ?
+      <Text weight="bolder" size="xl" align="center" color="blue">
+        Loading, please wait!
+      </Text> :
+      <div id="7e79" className="calendar">
+        {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
+      </div>
   );
 };
-
 export default Home;

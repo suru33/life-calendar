@@ -129,6 +129,7 @@ const LifeEventModal = (props: LifeEventModalProps) => {
           label="Start date"
           value={startDate}
           inputFormat={DATE_FORMAT}
+          firstDayOfWeek="sunday"
           error={startDateError}
           onChange={setStartDate}/>
         <DatePicker
@@ -136,6 +137,7 @@ const LifeEventModal = (props: LifeEventModalProps) => {
           label="End date"
           value={endDate}
           inputFormat={DATE_FORMAT}
+          firstDayOfWeek="sunday"
           error={endDateError}
           onChange={setEndDate}/>
         <ColorInput
