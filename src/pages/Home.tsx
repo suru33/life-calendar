@@ -25,6 +25,7 @@ import "./Home.css";
 
 const Home = () => {
   dayjs.extend(isBetweenPlugin);
+  const TOTAL_WEEKS = 5170;
 
   // localstorage
   const [dateOfBirth] = useLocalStorage<OnlyDate>(dateOfBirthLocalStorageConfig);
@@ -83,7 +84,6 @@ const Home = () => {
       const endDay = dayjs(dateOfBirth).add(100, "years")
         .endOf("week").startOf("day").toDate();
 
-      const totalWeeks = 5170;
       const lifeCalendarWeeks: LifeCalendar = [];
 
       const events = lifeEvents.filter(e => isValidEvent(startDay, endDay, e));
@@ -91,8 +91,7 @@ const Home = () => {
 
       let weekStart = dayjs(startDay);
       let weekEnd = weekStart.add(6, "days").endOf("day");
-
-      for (let i = 0; i < totalWeeks; i++) {
+      for (let i = 0; i < TOTAL_WEEKS; i++) {
         const weekBookmarks = bookmarks.filter(b => isBookmarkInRange(weekStart, weekEnd, b));
         const weekEvents: EventRange[] = [];
         events.map(e => createEventInRange(weekStart, weekEnd, e))
@@ -107,10 +106,10 @@ const Home = () => {
           .startOf("day").add(12, "hours");
         const d2 = dayjs(new Date(weekEnd.year(), dob.month(), dob.date()))
           .startOf("day").add(12, "hours");
-
         const isBirthday = d1.isBetween(weekStart, weekEnd, "day", "[]")
           || d2.isBetween(weekStart, weekEnd, "day", "[]");
-        const color = weekEvents.length === 0 ? defaultBg : weekEvents[weekEvents.length - 1].event.color;
+
+        const bg = weekEvents.length === 0 ? defaultBg : weekEvents[weekEvents.length - 1].event.color;
         lifeCalendarWeeks.push({
           id: i.toString(16),
           start: weekStart,
@@ -119,7 +118,7 @@ const Home = () => {
           isNewyear: isNewyear,
           bookmarks: weekBookmarks,
           events: weekEvents,
-          color: color
+          color: bg
         });
         weekStart = weekStart.add(7, "days").startOf("day");
         weekEnd = weekEnd.add(7, "days").endOf("day");
@@ -131,12 +130,10 @@ const Home = () => {
     setPending(false);
   }, []);
 
-  const createLifeCalendarDiv = (i: LifeCalendarWeek) => {
+  const createWeek = (i: LifeCalendarWeek) => {
     let icon;
     let background = i.color;
-    const tooltips: string[] = [];
-
-    tooltips.push(`${i.start.format(DATE_FORMAT)} to ${i.end.format(DATE_FORMAT)}`);
+    const tooltips: string[] = [`${i.start.format(DATE_FORMAT)} to ${i.end.format(DATE_FORMAT)}`];
 
     if (i.bookmarks.length !== 0) {
       icon = icons.bookmark;
@@ -145,7 +142,7 @@ const Home = () => {
     if (i.isNewyear) {
       icon = icons.newyear;
       background = newyear.bg;
-      tooltips.push(`Happy new year: ${dayjs(i.end).year()}`);
+      tooltips.push(`🎉 Happy new year: ${i.end.year()}`);
     }
 
     if (i.isBirthday) {
@@ -155,11 +152,11 @@ const Home = () => {
       if (age === 0) {
         icon = icons.born;
         background = born.bg;
-        tooltips.push("You born on this week. Welcome to the word!");
+        tooltips.push("🥳 You born on this week. Welcome to the word!");
       } else if (age === 1) {
-        tooltips.push("You are 1 year old");
+        tooltips.push("🥳 You are 1 year old");
       } else {
-        tooltips.push(`You are ${dayjs(i.end).diff(dateOfBirth, "years")} years old`);
+        tooltips.push(`🥳 You are ${dayjs(i.end).diff(dateOfBirth, "years")} years old`);
       }
     }
 
@@ -183,7 +180,12 @@ const Home = () => {
       <Stack spacing="xs" key={`${i.id}s`}>
         {
           tooltips.map((ttt, ix) =>
-            <Text size="xs" weight={ix === 0 ? "bold" : "inherit"} key={`${i.id}t${ix}`}>{ttt}</Text>)
+            <Text size="xs"
+              sx={ix === 0 ? { fontWeight: "bolder" } : {}}
+              key={`${i.id}t${ix}`}>
+              {ttt}
+            </Text>
+          )
         }
       </Stack>;
 
@@ -200,7 +202,7 @@ const Home = () => {
         Loading, please wait!
       </Text> :
       <div id="7e79" className="calendar">
-        {lifeCalendar.map((week) => createLifeCalendarDiv(week))}
+        {lifeCalendar.map((week) => createWeek(week))}
       </div>
   );
 };
